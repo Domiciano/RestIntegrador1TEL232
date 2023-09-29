@@ -2,25 +2,25 @@ package com.example.userapp.model.dto;
 
 public class UserDTO {
 
-    private String nombreDeUsario;
+    private String nombreDeUsuario;
     private String correoElectronico;
     private String clave;
 
     public UserDTO() {
     }
 
-    public UserDTO(String nombreDeUsario, String correoElectronico, String clave) {
-        this.nombreDeUsario = nombreDeUsario;
+    public UserDTO(String nombreDeUsuario, String correoElectronico, String clave) {
+        this.nombreDeUsuario = nombreDeUsuario;
         this.correoElectronico = correoElectronico;
         this.clave = clave;
     }
 
-    public String getNombreDeUsario() {
-        return nombreDeUsario;
+    public String getNombreDeUsuario() {
+        return nombreDeUsuario;
     }
 
-    public void setNombreDeUsario(String nombreDeUsario) {
-        this.nombreDeUsario = nombreDeUsario;
+    public void setNombreDeUsuario(String nombreDeUsario) {
+        this.nombreDeUsuario = nombreDeUsario;
     }
 
     public String getCorreoElectronico() {
