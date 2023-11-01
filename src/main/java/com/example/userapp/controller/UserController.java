@@ -1,7 +1,8 @@
 package com.example.userapp.controller;
 
 
-import com.example.userapp.model.dto.UserDTO;
+import com.example.userapp.model.dto.SigninUserDTO;
+import com.example.userapp.model.dto.SignupUserDTO;
 import com.example.userapp.model.entity.User;
 import com.example.userapp.model.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,10 +30,10 @@ public class UserController {
         var user = repository.findById(auth);
         if(user.isPresent()){
             var users = repository.findAll();
-            var output = new ArrayList<UserDTO>();
+            var output = new ArrayList<SignupUserDTO>();
             users.forEach(u ->{
                 output.add(
-                        new UserDTO(u.getName(), u.getEmail(), u.getPassword())
+                        new SignupUserDTO(u.getName(), u.getEmail(), u.getPassword())
                 );
             });
             return ResponseEntity.status(200).body(output);
@@ -43,8 +44,8 @@ public class UserController {
     }
 
     @PostMapping("user/login")
-    public ResponseEntity<?> login(@RequestBody UserDTO user){
-        var dbuser = repository.getByEmailAndPassword(user.getCorreoElectronico(), user.getClave());
+    public ResponseEntity<?> login(@RequestBody SigninUserDTO user){
+        var dbuser = repository.getByEmailAndPassword(user.getEmail(), user.getPassword());
         if(dbuser.isPresent()){
             return ResponseEntity.status(200).body(dbuser.get());
         }else{
@@ -54,11 +55,11 @@ public class UserController {
     }
 
     @PostMapping("user/create")
-    public ResponseEntity<?> create(@RequestBody UserDTO user){
+    public ResponseEntity<?> create(@RequestBody SignupUserDTO user){
         //mapping
         //DTO -> Entity
         User userEntity = new User(
-                UUID.randomUUID().toString(),user.getNombreDeUsuario(), user.getCorreoElectronico(), user.getClave()
+                UUID.randomUUID().toString(),user.getUsername(), user.getEmail(), user.getPassword()
         );
         //Guardamos en la base de datos
         repository.save(userEntity);
