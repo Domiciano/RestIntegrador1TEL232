@@ -8,6 +8,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
+import java.util.UUID;
+
 @RestController
 @CrossOrigin(maxAge = 3600)
 public class UserController {
@@ -21,20 +24,42 @@ public class UserController {
     }
 
     @GetMapping("user/all")
-    public ResponseEntity<?> getAll(){
-        var users = repository.findAll();
-        return ResponseEntity.status(200).body(users);
+    public ResponseEntity<?> getAll(@RequestHeader("Authorization") String auth){
+
+        var user = repository.findById(auth);
+        if(user.isPresent()){
+            var users = repository.findAll();
+            var output = new ArrayList<UserDTO>();
+            users.forEach(u ->{
+                output.add(
+                        new UserDTO(u.getName(), u.getEmail(), u.getPassword())
+                );
+            });
+            return ResponseEntity.status(200).body(output);
+        }else{
+            return ResponseEntity.status(400).body("No autorizado");
+        }
+
+    }
+
+    @PostMapping("user/login")
+    public ResponseEntity<?> login(@RequestBody UserDTO user){
+        var dbuser = repository.getByEmailAndPassword(user.getCorreoElectronico(), user.getClave());
+        if(dbuser.isPresent()){
+            return ResponseEntity.status(200).body(dbuser.get());
+        }else{
+            return ResponseEntity.status(400).body("Bad credentials");
+        }
+
     }
 
     @PostMapping("user/create")
     public ResponseEntity<?> create(@RequestBody UserDTO user){
-
         //mapping
         //DTO -> Entity
         User userEntity = new User(
-                0,user.getNombreDeUsuario(), user.getCorreoElectronico(), user.getClave()
+                UUID.randomUUID().toString(),user.getNombreDeUsuario(), user.getCorreoElectronico(), user.getClave()
         );
-
         //Guardamos en la base de datos
         repository.save(userEntity);
 

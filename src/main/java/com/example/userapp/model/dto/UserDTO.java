@@ -1,5 +1,8 @@
 package com.example.userapp.model.dto;
 
+import java.util.ArrayList;
+import java.util.Collections;
+
 public class UserDTO {
 
     private String nombreDeUsuario;
