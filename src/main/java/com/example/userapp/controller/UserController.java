@@ -25,6 +25,11 @@ public class UserController {
         this.repository = repository;
     }
 
+    @GetMapping("user/example")
+    public ResponseEntity<?> example() {
+        return ResponseEntity.status(200).body("Example");
+    }
+
     @GetMapping("user/all")
     public ResponseEntity<?> getAll(@RequestHeader("Authorization") String auth) {
 
